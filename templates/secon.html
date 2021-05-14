@@ -2,7 +2,7 @@
 {% block content %}
 <div class="testbox">
     {% if user%}
-    <form action="/update/{{user[2]}}" method="POST">
+    <form action="/update/{{user[2]}}/{{user[1]}}" method="POST">
     {% else %}
     <form action="/save" method="POST">
     {% endif %}
@@ -35,9 +35,6 @@
         
       </div>
     </form>
-    <div class="btn-block">
-      <a href="/"><button >Regresar</button></a>
-  </div>
   </div>
   
   

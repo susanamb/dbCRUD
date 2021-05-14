@@ -63,8 +63,8 @@ def save():
     <a href='/' style='width: 100%;' class='btn btn-primary btn-lg btn-block' role='button'>Regresar</a>
     """
 
-@app.route('/update/<cel_phone>', methods = ['POST'])
-def update(cel_phone):
+@app.route('/update/<cel_phone>/<lname>', methods = ['POST'])
+def update(cel_phone,lname):
     if request.method == 'POST':
         try:
             name = request.form['name']
@@ -73,7 +73,7 @@ def update(cel_phone):
             age = request.form['age']
             with sqlite3.connect("data.db") as conn:
                 c = conn.cursor()
-                c.execute("UPDATE people SET name =? ,last_name =? ,phone=? ,age=? WHERE phone =? ",(name,last_name,phone,age,cel_phone))
+                c.execute("UPDATE people SET name =? ,last_name =? ,phone=? ,age=? WHERE phone =? and last_name =?",(name,last_name,phone,age,cel_phone,lname))
                 conn.commit()
                 task = "Updateado exitosamente"
         except:
