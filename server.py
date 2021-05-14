@@ -63,8 +63,8 @@ def save():
     <a href='/' style='width: 100%;' class='btn btn-primary btn-lg btn-block' role='button'>Regresar</a>
     """
 
-@app.route('/update', methods = ['POST'])
-def update():
+@app.route('/update/<cel_phone>', methods = ['POST'])
+def update(cel_phone):
     if request.method == 'POST':
         try:
             name = request.form['name']
@@ -73,7 +73,7 @@ def update():
             age = request.form['age']
             with sqlite3.connect("data.db") as conn:
                 c = conn.cursor()
-                c.execute("UPDATE people SET name =? ,last_name =? ,phone=? ,age=? ",(name,last_name,phone,age))
+                c.execute("UPDATE people SET name =? ,last_name =? ,phone=? ,age=? WHERE phone =? ",(name,last_name,phone,age,cel_phone))
                 conn.commit()
                 task = "Updateado exitosamente"
         except:
@@ -87,22 +87,24 @@ def update():
 
 @app.route('/delete/<phone>', methods = ['POST'])
 def delete(phone):
+    if request.method == 'POST':
         try:
             print(phone)
-            with sqlite3.connect("data.db") as conn:          
+            with sqlite3.connect("data.db") as conn:
                 c = conn.cursor()
-                c.execute("DELETE FROM people WHERE phone = (?)",(phone))
+                c.execute(f"DELETE FROM people WHERE phone = {phone} ")
                 conn.commit()
-                task = "deletado"
+                task = "Eliminado exitosamente"
         except:
-            conn.rollback()      
-            task ='valiendo'
+            conn.rollback()
+            task = "valiendo"
         finally:
             conn.close()
 
         return f"""<h1>{task}</h1>
     <a href='/' style='width: 100%;' class='btn btn-primary btn-lg btn-block' role='button'>Regresar</a>
     """
+
 @app.route("/edit/<phone>", methods = ['POST'])
 def edit(phone):
 
@@ -112,11 +114,9 @@ def edit(phone):
     c.execute(f"SELECT * FROM people WHERE phone = {phone}")
    
     row = c.fetchone(); 
-    print(row)
     user = []
     for i in row:
         x= i
-        print (x)
         user.append(x)
 
     

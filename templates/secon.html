@@ -2,7 +2,7 @@
 {% block content %}
 <div class="testbox">
     {% if user%}
-    <form action="/update" method="POST">
+    <form action="/update/{{user[2]}}" method="POST">
     {% else %}
     <form action="/save" method="POST">
     {% endif %}
