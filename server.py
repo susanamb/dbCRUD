@@ -3,14 +3,14 @@ import sqlite3
 
 
 
-conn = sqlite3.connect('users.db')
+conn = sqlite3.connect('data.db')
 
 c = conn.cursor()
 #c.execute("""
-#    CREATE TABLE user(
+#    CREATE TABLE people(
 #        name text,
 #        last_name text,
-#        email text,
+#        phone text,
 #        age integer
 #    ) 
 #""")
@@ -27,14 +27,14 @@ def home():
 
 @app.route("/second")
 def second():
-    return render_template("secon.html")
+    return render_template("secon.html", user = 0)
 
 @app.route("/ver")
 def ver():
-    conn = sqlite3.connect("users.db")
+    conn = sqlite3.connect("data.db")
     conn.row_factory = sqlite3.Row  
     cur = conn.cursor()
-    cur.execute("SELECT * FROM user")
+    cur.execute("SELECT * FROM people")
    
     rows = cur.fetchall(); 
 
@@ -47,39 +47,80 @@ def save():
         try:
             name = request.form['name']
             last_name = request.form['ln']
-            email = request.form['email']
+            phone = request.form['phone']
             age = request.form['age']
-            print('first step')
-            with sqlite3.connect("users.db") as conn:
+            with sqlite3.connect("data.db") as conn:
                 c = conn.cursor()
-                c.execute("INSERT INTO user (name,last_name,email,age) VALUES(?,?,?,?)",(name,last_name,email,age))
+                c.execute("INSERT INTO people (name,last_name,phone,age) VALUES(?,?,?,?)",(name,last_name,phone,age))
                 conn.commit()
+                task = "Insertado exitosamente"
         except:
             conn.rollback()
-            print('valiendo')
+            task = "valiendo"
         finally:
             conn.close()
-    return "<h1>inserted</h1>"
-
-@app.route('/deleted/<mail>', methods = ['POST'])
-def deleted(mail):
-        try:
-            print(mail)
-            with sqlite3.connect("users.db") as conn:
-                c = conn.cursor()
-                c.execute(f"DELETE FROM user WHERE email = {mail}")
-                conn.commit()
-                print("deletado")
-        except:
-            conn.rollback()      
-            print('valiendo')
-        finally:
-            conn.close()
-
-        return """<h1>Deleted</h1>
+    return f"""<h1>{task}</h1>
     <a href='/' style='width: 100%;' class='btn btn-primary btn-lg btn-block' role='button'>Regresar</a>
     """
 
+@app.route('/update', methods = ['POST'])
+def update():
+    if request.method == 'POST':
+        try:
+            name = request.form['name']
+            last_name = request.form['ln']
+            phone = request.form['phone']
+            age = request.form['age']
+            with sqlite3.connect("data.db") as conn:
+                c = conn.cursor()
+                c.execute("UPDATE people SET name =? ,last_name =? ,phone=? ,age=? ",(name,last_name,phone,age))
+                conn.commit()
+                task = "Updateado exitosamente"
+        except:
+            conn.rollback()
+            task = "valiendo"
+        finally:
+            conn.close()
+    return f"""<h1>{task}</h1>
+    <a href='/' style='width: 100%;' class='btn btn-primary btn-lg btn-block' role='button'>Regresar</a>
+    """
+
+@app.route('/delete/<phone>', methods = ['POST'])
+def delete(phone):
+        try:
+            print(phone)
+            with sqlite3.connect("data.db") as conn:          
+                c = conn.cursor()
+                c.execute("DELETE FROM people WHERE phone = (?)",(phone))
+                conn.commit()
+                task = "deletado"
+        except:
+            conn.rollback()      
+            task ='valiendo'
+        finally:
+            conn.close()
+
+        return f"""<h1>{task}</h1>
+    <a href='/' style='width: 100%;' class='btn btn-primary btn-lg btn-block' role='button'>Regresar</a>
+    """
+@app.route("/edit/<phone>", methods = ['POST'])
+def edit(phone):
+
+    conn = sqlite3.connect("data.db")
+    #conn.row_factory = sqlite3.Row  
+    c = conn.cursor()
+    c.execute(f"SELECT * FROM people WHERE phone = {phone}")
+   
+    row = c.fetchone(); 
+    print(row)
+    user = []
+    for i in row:
+        x= i
+        print (x)
+        user.append(x)
+
+    
+    return render_template("secon.html", user = user)
 
 if __name__ == "__main__":
     print("running....")

@@ -9,7 +9,7 @@
     <thead>
        <th scope="col">Name</th>
        <th scope="col">Last name</th>
-       <th scope="col">Email</th>
+       <th scope="col">Phone</th>
        <th scope="col">Age</th>
        <th scope="col">Update</th>
        <th scope="col">Delete</th>
@@ -20,10 +20,10 @@
        <tr>
           <td>{{row["name"]}}</td>
           <td>{{row["last_name"]}}</td>
-          <td>{{row["email"]}}</td>
+          <td>{{row["phone"]}}</td>
           <td>{{row['age']}}</td>
-          <td><form action="/deleted/{{row['email']}}" method="POST" ><button class="btn btn-danger" type="submit" name="delete" value="{{email}}"> Delete</button></form></td>	
-          <td><form action="" method="POST" ><button class="btn btn-info" type="submit" name="update" value="{{  item2  }}"> Update</button> </form></td>	
+          <td><form action="/delete/{{row['phone']}}" method="POST" ><button class="btn btn-danger" type="submit" name="delete" value="{{row['phone']}}"> Delete</button></form></td>	
+          <td><form action="/edit/{{row['phone']}}" method="POST" ><button class="btn btn-info" type="submit" name="update" value="{{row['phone']}}"> Update</button></form></td>	
         </tr>
     {% endfor %}
  </table>
