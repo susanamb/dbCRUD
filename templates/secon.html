@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="testbox">
+    
+    <form action="/save" method="POST">
+      <div class="banner">
+        <h1>Ingresa tus datos</h1>
+      </div>
+      <div class="colums">
+        <div class="item">
+          <label for="fname"> Last name<span>*</span>  </label>
+          <input id="fname" type="text" name="ln" required pattern="{1,15}"/>
+        </div>
+        <div class="item">
+          <label for="address1">Name<span>*</span></label>
+          <input id="address1" type="text"   name="name" required pattern="{1,15}"/>
+        </div>
+        <div class="item">
+          <label for="address2">Email</label>
+          <input id="address2" type="email"   name="email" />
+        </div>
+        <div class="item">
+          <label for="state">Age<span>*</span></label>
+          <input id="state" type="number"  name="age" required/>
+        </div>
+          
+      
+      <div class="btn-block">
+        <a href="/"><button type="submit" >Aceptar</button></a>
+        
+      </div>
+    </form>
+    <div class="btn-block">
+      <a href="/"><button >Regresar</button></a>
+  </div>
+  </div>
+  
+  
+{% endblock %}
